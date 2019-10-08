@@ -5,6 +5,7 @@ public class Cabin {
     boolean isMoving=false;
     boolean stopNext = false;
     boolean stop = false;
+    Controller controller;
     FloorSensor sensor = new FloorSensor();
 
 
@@ -13,8 +14,10 @@ public class Cabin {
             try {
                 sleep(1000);
                 System.out.println("I passed a floor");
-                if(stopNext)
+                controller.sendNotif();
+                if(stopNext) {
                     stop = true;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -42,7 +45,6 @@ public class Cabin {
         if(isMoving) return;
         isMoving=true;
         System.out.println("The cabin goes down");
-        //Add a signal when passing a floor
     }
 
     public void emergencyStop(){
