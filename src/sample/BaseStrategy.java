@@ -1,36 +1,70 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 public class BaseStrategy implements Strategy {
 
     @Override
-    public void addInPath(Controller controller, String request) {
-        int floor = Integer.parseInt(request.substring(2));
-        String direction = request.substring(0, 2);
-
-        if (controller.getCurrentPath().contains(floor) || controller.getMissingPath().contains(floor))
-            return; //Request already existing
-
-        if (controller.getCabinMovement().equals(Movement.STOP)) controller.getCurrentPath().add(floor);
-
-        if(direction.equals("UP") && controller.getCabinMovement().equals(Movement.UP) && floor > controller.getCurrentFloor()){
-            controller.getCurrentPath().add(floor);
-            Collections.sort(controller.getCurrentPath());
+    public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
+        if(controller.cabinMovement.equals(Movement.STOP)){
+            if(controller.currentFloor < floorDest)
+                controller.upList.add(floorDest);
+            else
+                controller.downList.add(floorDest);
+            controller.destination = floorDest;
         }
-        else if(direction.equals("DO") && controller.getCabinMovement().equals(Movement.DOWN) && floor < controller.getCurrentFloor()){
-            controller.getCurrentPath().add(floor);
-            Collections.sort(controller.getCurrentPath(), Collections.reverseOrder());
-        }
-        else if(controller.getCabinMovement().equals(Movement.UP)){
-            controller.getMissingPath().add(floor);
-            Collections.sort(controller.getMissingPath(), Collections.reverseOrder());
+        else if(controller.cabinMovement.equals(Movement.UP)){
+            if(requestedMovement.equals(Movement.UP)){
+                if(controller.currentFloor + 1 < floorDest) {
+                    controller.upList.add(floorDest);
+                    Collections.sort(controller.upList);
+                    controller.destination = controller.upList.get(0);
+                }
+                else{
+                    controller.upListNext.add(floorDest);
+                    Collections.sort(controller.upList);
+                }
+            }
+            else{
+                controller.downList.add(floorDest);
+                Collections.sort(controller.downList, Collections.reverseOrder());
+            }
         }
         else{
-            controller.getMissingPath().add(floor);
-            Collections.sort(controller.getMissingPath());
+            if(requestedMovement.equals(Movement.DOWN)){
+                if(controller.currentFloor - 1 > floorDest){
+                    controller.downList.add(floorDest);
+                    Collections.sort(controller.downList, Collections.reverseOrder());
+                    controller.destination = controller.downList.get(0);
+                }
+                else{
+                    controller.downListNext.add(floorDest);
+                    Collections.sort(controller.downList);
+                }
+            }
+            else{
+                controller.upList.add(floorDest);
+                Collections.sort(controller.upList);
+            }
         }
 
+    }
+
+    @Override
+    public void addInPath(Controller controller, int floorDest) {
+        if(controller.currentFloor < floorDest){
+            controller.upList.add(floorDest);
+            Collections.sort(controller.upList);
+            if(controller.cabinMovement.equals(Movement.UP))
+                controller.destination = controller.upList.get(0);
+        }
+        else{
+            controller.downList.add(floorDest);
+            Collections.sort(controller.upList, Collections.reverseOrder());
+            if(controller.cabinMovement.equals(Movement.DOWN))
+                controller.destination = controller.downList.get(0);
+        }
     }
 }
