@@ -1,3 +1,4 @@
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -9,12 +10,15 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +34,8 @@ public class Test2 extends Application {
     private Rectangle liftUpRectangle;
     private Rectangle liftDownRectangle;
     private Text liftFloorText;
+    private AnchorPane liftObject;
+    int numberOfFloors = 7;
 
     public static void main(String[] args) {
         Application.launch(Test2.class, args);
@@ -43,6 +49,7 @@ public class Test2 extends Application {
 
     public void generateLift(AnchorPane window){
         AnchorPane lift = new AnchorPane();
+        liftObject = lift;
         lift.setLayoutX(343);
         lift.setPrefHeight(66);
         lift.setPrefWidth(274);
@@ -141,6 +148,7 @@ public class Test2 extends Application {
         }
 
         Label messageDisplayer = new Label();
+        messagesText = messageDisplayer;
         messageDisplayer.setId("messagesText");
         messageDisplayer.setPrefHeight(39);
         messageDisplayer.setPrefWidth(587);
@@ -261,12 +269,13 @@ public class Test2 extends Application {
         }
     }
 
+    public int fl = 0;
     @Override
     public void start(Stage primaryStage) {
-        int numberOfFloors = 7;
 
         Group root = new Group();
         Scene scene = new Scene(root, 960, 540, Color.web("#333333"));
+
         primaryStage.setScene(scene);
 
         AnchorPane window = new AnchorPane();
@@ -283,6 +292,17 @@ public class Test2 extends Application {
 
         root.getChildren().add(window);
         primaryStage.show();
+        moveLift(numberOfFloors-1, false);
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if(key.getCode() == KeyCode.Z) {
+                moveLift(1,true);
+            }
+        });
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if(key.getCode() == KeyCode.S) {
+                moveLift(1,false);
+            }
+        });
     }
 
     @FXML
@@ -308,7 +328,6 @@ public class Test2 extends Application {
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(9);
-        btn.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO DOWN");
     }
 
@@ -374,5 +393,16 @@ public class Test2 extends Application {
     @FXML
     public void changeLiftText(int floor){
         liftFloorText.setText(Integer.toString(floor));
+    }
+
+    public void moveLift(int floor,boolean direction){
+        TranslateTransition tt = new TranslateTransition(Duration.millis(1000), liftObject);
+        if(direction){
+            tt.setByY(-66 * floor);
+        } else {
+            tt.setByY(66 * floor);
+        }
+        tt.play();
+//        liftObject.setLayoutY((66 * numberOfFloors) - 66 * floor - 66);
     }
 }
