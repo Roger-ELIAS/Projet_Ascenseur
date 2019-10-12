@@ -11,6 +11,8 @@ public class Controller {
     int destination;
     boolean emergencyStopped = false;
     float startTime;
+    float stoppedTime = 0;
+    CabinMover cabinMover;
 
     ArrayList<Integer> upList = new ArrayList<>();
     ArrayList<Integer> downList = new ArrayList<>();
@@ -22,6 +24,7 @@ public class Controller {
             currentFloor++;
         else
             currentFloor--;
+        startTime = System.nanoTime();
     }
 
     public void emergencyStop(){
@@ -31,6 +34,9 @@ public class Controller {
         downList = new ArrayList<>();
         upListNext = new ArrayList<>();
         downListNext = new ArrayList<>();
+        stoppedTime = System.nanoTime();
+        cabinMover.interrupt();
+        moveCabin();
     }
 
     public int getMaxTravelValue(){
@@ -40,7 +46,18 @@ public class Controller {
             return 7 - currentFloor;
     }
 
-    public void moveCabin() {
+    public class CabinMover extends Thread {
+        public void run(){
+            howToMoveCabin();
+        }
+    }
+
+    public void moveCabin(){
+        cabinMover = new CabinMover();
+        cabinMover.start();
+    }
+
+    public void howToMoveCabin() {
         while (!emergencyStopped) {
             if (!cabinMovement.equals(Movement.STOP)) {
                 if (!upList.isEmpty() || !downList.isEmpty()) {
@@ -65,7 +82,7 @@ public class Controller {
                         }
                         else{
                             cabin.goDown();
-                            if(destination == currentFloor -1 || currentFloor - 1== 0 ){
+                            if(destination == currentFloor - 1 || currentFloor - 1 == 0 ){
                                 cabin.stopNext();
                                 upList.remove(upList.indexOf(destination));
                                 destination = upList.get(0);

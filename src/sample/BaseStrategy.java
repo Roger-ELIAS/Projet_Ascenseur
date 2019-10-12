@@ -8,6 +8,8 @@ public class BaseStrategy implements Strategy {
 
     @Override
     public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
+        if(!controller.upList.contains(floorDest)  && !controller.downList.contains(floorDest)  && !controller.upListNext.contains(floorDest)  && !controller.downListNext.contains(floorDest)) return;
+
         if(controller.cabinMovement.equals(Movement.STOP)){
             if(controller.currentFloor < floorDest)
                 controller.upList.add(floorDest);
@@ -49,11 +51,11 @@ public class BaseStrategy implements Strategy {
                 Collections.sort(controller.upList);
             }
         }
-
     }
 
     @Override
     public void addInPath(Controller controller, int floorDest) {
+        if(!controller.upList.contains(floorDest)  && !controller.downList.contains(floorDest)  && !controller.upListNext.contains(floorDest)  && !controller.downListNext.contains(floorDest)) return;
         if(controller.currentFloor < floorDest){
             controller.upList.add(floorDest);
             Collections.sort(controller.upList);
