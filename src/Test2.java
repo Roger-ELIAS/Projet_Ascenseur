@@ -36,6 +36,7 @@ public class Test2 extends Application {
     private Text liftFloorText;
     private AnchorPane liftObject;
     int numberOfFloors = 7;
+    TranslateTransition tt;
 
     public static void main(String[] args) {
         Application.launch(Test2.class, args);
@@ -272,7 +273,6 @@ public class Test2 extends Application {
     public int fl = 0;
     @Override
     public void start(Stage primaryStage) {
-
         Group root = new Group();
         Scene scene = new Scene(root, 960, 540, Color.web("#333333"));
 
@@ -292,15 +292,15 @@ public class Test2 extends Application {
 
         root.getChildren().add(window);
         primaryStage.show();
-        moveLift(numberOfFloors-1, false);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode() == KeyCode.Z) {
-                moveLift(1,true);
+                startmovingLift(7,true);
             }
         });
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode() == KeyCode.S) {
-                moveLift(1,false);
+                stopmovingLift();
+                startmovingLift(7,false);
             }
         });
     }
@@ -395,14 +395,18 @@ public class Test2 extends Application {
         liftFloorText.setText(Integer.toString(floor));
     }
 
-    public void moveLift(int floor,boolean direction){
-        TranslateTransition tt = new TranslateTransition(Duration.millis(1000), liftObject);
+    public void startmovingLift(int floorsLeft, boolean direction){
+        tt = new TranslateTransition(Duration.millis(floorsLeft*1000), liftObject);
         if(direction){
-            tt.setByY(-66 * floor);
+            tt.setByY(-66 * floorsLeft);
         } else {
-            tt.setByY(66 * floor);
+            tt.setByY(66 * floorsLeft);
         }
         tt.play();
+    }
+
+    public void stopmovingLift(){
+        tt.pause();
 //        liftObject.setLayoutY((66 * numberOfFloors) - 66 * floor - 66);
     }
 }
