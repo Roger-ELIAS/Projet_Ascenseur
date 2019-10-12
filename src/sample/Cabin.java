@@ -8,7 +8,6 @@ public class Cabin {
     Controller controller;
     FloorSensor sensor = new FloorSensor();
 
-
     public class FloorSensor extends Thread {
         public void run() {
             try {
@@ -49,7 +48,7 @@ public class Cabin {
 
     public void emergencyStop(){
         System.out.println("Instantly stop the cabin");
-        sensor.interrupt();
+
     }
 
     public void stopNext(){

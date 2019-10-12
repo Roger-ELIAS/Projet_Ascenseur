@@ -2,8 +2,6 @@ package sample;
 
 import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
-
 public class Controller {
 
     Cabin cabin = new Cabin();
@@ -11,6 +9,8 @@ public class Controller {
     int currentFloor = 0;
     Movement cabinMovement = Movement.STOP;
     int destination;
+    boolean emergencyStopped = false;
+    float startTime;
 
     ArrayList<Integer> upList = new ArrayList<>();
     ArrayList<Integer> downList = new ArrayList<>();
@@ -24,8 +24,24 @@ public class Controller {
             currentFloor--;
     }
 
+    public void emergencyStop(){
+        emergencyStopped = true;
+        cabinMovement = Movement.STOP;
+        upList = new ArrayList<>();
+        downList = new ArrayList<>();
+        upListNext = new ArrayList<>();
+        downListNext = new ArrayList<>();
+    }
+
+    public int getMaxTravelValue(){
+        if(cabinMovement.equals(Movement.DOWN))
+            return currentFloor;
+        else
+            return 7 - currentFloor;
+    }
+
     public void moveCabin() {
-        while (true) {
+        while (!emergencyStopped) {
             if (!cabinMovement.equals(Movement.STOP)) {
                 if (!upList.isEmpty() || !downList.isEmpty()) {
                     if (upList.isEmpty())
