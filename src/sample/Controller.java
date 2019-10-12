@@ -38,12 +38,22 @@ public class Controller {
                         cabinMovement = Movement.DOWN;
                 }
                 if (cabinMovement.equals(Movement.UP)) {
-                    cabin.goUp();
                     while (!upList.isEmpty()) {
-                        if (destination == currentFloor + 1 || currentFloor + 1 == 7) {
-                            cabin.stopNext();
-                            upList.remove(upList.indexOf(destination));
-                            destination = upList.get(0);
+                        if(currentFloor < upList.get(0)) {
+                            cabin.goUp();
+                            if (destination == currentFloor + 1 || currentFloor + 1 == 6) {
+                                cabin.stopNext();
+                                upList.remove(upList.indexOf(destination));
+                                destination = upList.get(0);
+                            }
+                        }
+                        else{
+                            cabin.goDown();
+                            if(destination == currentFloor -1 || currentFloor - 1== 0 ){
+                                cabin.stopNext();
+                                upList.remove(upList.indexOf(destination));
+                                destination = upList.get(0);
+                            }
                         }
                     }
                     if(!downList.isEmpty() || !downListNext.isEmpty())
@@ -55,30 +65,39 @@ public class Controller {
                     }
                 }
                 else {
-                    cabinMovement = Movement.DOWN;
-                    cabin.goDown();
-                    cabinMovement = Movement.DOWN;
-                        if (!downList.isEmpty()) {
-                            cabin.goDown();
-                            while (!downList.isEmpty()) {
+                    if (!downList.isEmpty()) {
+                        while (!downList.isEmpty()) {
+                            if(currentFloor > downList.get(0)) {
+                                cabin.goDown();
                                 if (destination == currentFloor - 1 || currentFloor - 1 == 0) {
                                     cabin.stopNext();
                                     downList.remove(downList.indexOf(destination));
                                     destination = downList.get(0);
                                 }
                             }
-                            if(!upList.isEmpty() || !upListNext.isEmpty()){
-                                cabinMovement = Movement.UP;
-                                if(upList.isEmpty() && !upListNext.isEmpty()) {
-                                    upList = upListNext;
-                                    upListNext = new ArrayList<>();
+                            else{
+                                cabin.goUp();
+                                if(destination == currentFloor  + 1 || currentFloor + 1 == 0 ){
+                                    cabin.stopNext();
+                                    downList.remove(downList.indexOf(destination));
+                                    destination = downList.get(0);
                                 }
+                            }
+                        }
+                        if(!upList.isEmpty() || !upListNext.isEmpty()){
+                            cabinMovement = Movement.UP;
+                            if(upList.isEmpty() && !upListNext.isEmpty()) {
+                                upList = upListNext;
+                                upListNext = new ArrayList<>();
                             }
                         }
                     }
                 }
+                if(upList.isEmpty() && upListNext.isEmpty() && downList.isEmpty() && downListNext.isEmpty())
+                    cabinMovement = Movement.STOP;
             }
         }
     }
+}
 
 
