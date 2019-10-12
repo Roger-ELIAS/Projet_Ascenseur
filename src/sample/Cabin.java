@@ -11,7 +11,16 @@ public class Cabin {
     public class FloorSensor extends Thread {
         public void run() {
             try {
-                sleep(1000);
+                if(controller.desynchTime == 0) {
+                    sleep(1000);
+                }
+                else{
+                    long time = (long)controller.desynchTime*1000000;
+                    if(controller.cabinMovement.equals(Movement.UP))
+                        sleep(1000 - time);
+                    else
+                        sleep(time);
+                }
                 System.out.println("I passed a floor");
                 controller.sendNotif();
                 if(stopNext) {

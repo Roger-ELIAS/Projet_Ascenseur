@@ -10,8 +10,9 @@ public class Controller {
     Movement cabinMovement = Movement.STOP;
     int destination;
     boolean emergencyStopped = false;
-    float startTime;
+    float startTime = 0;
     float stoppedTime = 0;
+    float desynchTime = 0;
     CabinMover cabinMover;
 
     ArrayList<Integer> upList = new ArrayList<>();
@@ -36,6 +37,7 @@ public class Controller {
         downListNext = new ArrayList<>();
         stoppedTime = System.nanoTime();
         cabinMover.interrupt();
+        desynchTime = stoppedTime - startTime;
         moveCabin();
     }
 
