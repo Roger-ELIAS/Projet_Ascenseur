@@ -7,7 +7,7 @@ public class Cabin {
     boolean stop = false;
     Controller controller;
     FloorSensor sensor = new FloorSensor();
-    Motor simpleMotor = new SimpleMotor();
+    Motor simpleMotor = new SimpleMotor(controller);
 
     public class FloorSensor extends Thread {
         public void run() {

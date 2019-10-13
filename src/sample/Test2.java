@@ -301,13 +301,13 @@ public class Test2 extends Application {
         primaryStage.show();
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode() == KeyCode.Z) {
-                startmovingLift(7,true);
+                startMovingLift(7,true);
             }
         });
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode() == KeyCode.S) {
-                stopmovingLift();
-                startmovingLift(7,false);
+                stopMovingLift();
+                startMovingLift(7,false);
             }
         });
     }
@@ -324,38 +324,37 @@ public class Test2 extends Application {
 
     @FXML
     public void goUp(Event event) {
-        System.out.println(controller.cabinMovement);
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(7);
         controller.addInPath(controller, Integer.parseInt(result), Movement.UP);
+        System.out.println(controller.cabinMovement);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO UP");
     }
 
     @FXML
     public void goDown(Event event) {
-        System.out.println(controller.cabinMovement);
-
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(9);
         controller.addInPath(controller, Integer.parseInt(result), Movement.DOWN);
+        System.out.println(controller.cabinMovement);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO DOWN");
     }
 
     @FXML
     public void goTo(Event event) {
-        System.out.println(controller.cabinMovement);
 
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(3);
         controller.addInPath(controller, Integer.parseInt(result)+1);
+        System.out.println(controller.cabinMovement);
         messagesText.setText("MAKE LIFT GO TO FLOOR " + result);
     }
 
     @FXML
-    public void changeButtonColor(int index, boolean stat, boolean direction){
+    public static void changeButtonColor(int index, boolean stat, boolean direction){
         if(direction == true){
             if(stat == true){
                 upButtons.get(index).setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -372,7 +371,7 @@ public class Test2 extends Application {
     }
 
     @FXML
-    public void changeIndicatorolor(boolean stat, boolean direction){
+    public static void changeIndicatorColor(boolean stat, boolean direction){
         if(direction == true){
             if(stat == true){
                 for(Rectangle r : upIndicators)
@@ -397,7 +396,7 @@ public class Test2 extends Application {
     }
 
     @FXML
-    public void changeLiftButtonColor(int index, boolean stat){
+    public static void changeLiftButtonColor(int index, boolean stat){
         if(stat == true){
             controlButtons.get(index).setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         }else{
@@ -410,7 +409,7 @@ public class Test2 extends Application {
         liftFloorText.setText(Integer.toString(floor));
     }
 
-    public void startmovingLift(int floorsLeft, boolean direction){
+    static public void startMovingLift(int floorsLeft, boolean direction){
         tt = new TranslateTransition(Duration.millis(floorsLeft*1000), liftObject);
         if(direction){
             tt.setByY(-66 * floorsLeft);
@@ -420,7 +419,7 @@ public class Test2 extends Application {
         tt.play();
     }
 
-    public void stopmovingLift(){
+    static public void stopMovingLift(){
         tt.pause();
 //        liftObject.setLayoutY((66 * numberOfFloors) - 66 * floor - 66);
     }
