@@ -1,5 +1,4 @@
 package sample;
-import java.util.Collection;
 import java.util.Collections;
 
 public class BaseStrategy implements Strategy {
@@ -19,10 +18,12 @@ public class BaseStrategy implements Strategy {
             test2.changeButtonColor(floorDest, true, true);
             if(controller.currentFloor > floorDest)
                 controller.upListNext.add(floorDest);
-            else
+            else {
                 controller.upList.add(floorDest);
-            if(controller.destination<controller.upList.get(0))
-                controller.destination = floorDest;
+                if(controller.destination<controller.upList.get(0))
+                    controller.destination = floorDest;
+            }
+
             Collections.sort(controller.upList);
             Collections.sort(controller.upListNext);
         }
@@ -30,10 +31,11 @@ public class BaseStrategy implements Strategy {
             test2.changeButtonColor(floorDest, true, false);
             if(controller.currentFloor < floorDest)
                 controller.downListNext.add(floorDest);
-            else
+            else {
                 controller.downList.add(floorDest);
-            if(controller.destination<controller.downList.get(0))
-                controller.destination = floorDest;
+                if(controller.destination<controller.downList.get(0))
+                    controller.destination = floorDest;
+            }
             Collections.sort(controller.downList, Collections.reverseOrder());
             Collections.sort(controller.downListNext, Collections.reverseOrder());
         }
@@ -41,8 +43,6 @@ public class BaseStrategy implements Strategy {
 
     @Override
     public void addInPath(Controller controller, int floorDest) {
-        if (controller.upList.contains(floorDest - 1 ) || controller.downList.contains(floorDest - 1 ) || controller.upListNext.contains(floorDest - 1 ) || controller.downListNext.contains(floorDest - 1))
-            return;
 
         test2.changeLiftButtonColor(floorDest, true);
 

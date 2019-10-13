@@ -41,8 +41,7 @@ public class Test2 extends Application {
 
     private static Cabin myCabin = new Cabin();
     private static Controller controller = new Controller(myCabin);
-    private static
-    TranslateTransition tt;
+    private static TranslateTransition tt;
 
     public static void main(String[] args) {
 
