@@ -7,6 +7,7 @@ public class Cabin {
     boolean stop = false;
     Controller controller;
     FloorSensor sensor = new FloorSensor();
+    Motor simpleMotor = new SimpleMotor();
 
     public class FloorSensor extends Thread {
         public void run() {
@@ -15,11 +16,12 @@ public class Cabin {
                     sleep(1000);
                 }
                 else{
-                    long time = (long)controller.desynchTime*1000000;
+                    long time = (long)controller.desynchTime/1000000;
                     if(controller.cabinMovement.equals(Movement.UP))
                         sleep(1000 - time);
                     else
                         sleep(time);
+                    controller.desynchTime = 0;
                 }
                 System.out.println("I passed a floor");
                 controller.sendNotif();
@@ -34,9 +36,10 @@ public class Cabin {
 
 
     public void goUp(){
+        System.out.println("The cabin goes up");
         if(isMoving) return;
         isMoving=true;
-        System.out.println("The cabin goes up");
+        simpleMotor.goUp();
         sensor.start();
         try {
             sensor.join();
@@ -50,18 +53,29 @@ public class Cabin {
     }
 
     public void goDown(){
+        System.out.println("The cabin goes down");
         if(isMoving) return;
         isMoving=true;
-        System.out.println("The cabin goes down");
+        simpleMotor.goDown();
+        sensor.start();
+        try {
+            sensor.join();
+            while(!stop) {
+                sensor.start();
+                sensor.join();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void emergencyStop(){
-        System.out.println("Instantly stop the cabin");
-
+        simpleMotor.emergencyStop();
     }
 
     public void stopNext(){
-        System.out.println("The cabin will stop to the next floor");
+        System.out.println("The cabin will stop at the next floor");
+        simpleMotor.stopNext();
         stopNext = true;
     }
 }
