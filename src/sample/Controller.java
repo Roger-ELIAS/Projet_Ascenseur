@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Controller {
 
-    Cabin cabin = new Cabin();
-
+    Cabin cabin;
+    Strategy movingStrategy;
     int currentFloor = 0;
     Movement cabinMovement = Movement.STOP;
     int destination;
@@ -26,6 +26,25 @@ public class Controller {
         else
             currentFloor--;
         startTime = System.nanoTime();
+    }
+
+    public Controller(Cabin cabin) {
+        this.cabin = cabin;
+        this.movingStrategy = new BaseStrategy(new Test2());
+    }
+
+    public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
+
+        movingStrategy.addInPath(this, floorDest, requestedMovement);
+        System.out.println("Up List" + upList + upListNext);
+        System.out.println("Down List" + downList + downListNext);
+    }
+
+    public void addInPath(Controller controller, int floorDest){
+
+        movingStrategy.addInPath(this, floorDest);
+        System.out.println("Up List" + upList + upListNext);
+        System.out.println("Down List" + downList + downListNext);
     }
 
     public void emergencyStop(){

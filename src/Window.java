@@ -2,10 +2,15 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import sample.Cabin;
 
 public class Window {
+    Cabin myCabin;
+
     @FXML
     private Label messagesText ;
+
+
 
     @FXML
     private void fullStop(Event event) {

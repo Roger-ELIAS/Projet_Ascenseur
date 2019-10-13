@@ -1,3 +1,5 @@
+package sample;
+
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -25,20 +27,26 @@ import java.util.Collections;
 
 public class Test2 extends Application {
 
-    private ArrayList<Button> upButtons = new ArrayList<>();
-    private ArrayList<Button> downButtons = new ArrayList<>();
-    private ArrayList<Button> controlButtons = new ArrayList<>();
-    private ArrayList<Rectangle> upIndicators = new ArrayList<>();
-    private ArrayList<Text> floorNumberIndicators = new ArrayList<>();
-    private ArrayList<Rectangle> downIndicators = new ArrayList<>();
-    private Rectangle liftUpRectangle;
-    private Rectangle liftDownRectangle;
-    private Text liftFloorText;
-    private AnchorPane liftObject;
-    int numberOfFloors = 7;
+    private static ArrayList<Button> upButtons = new ArrayList<>();
+    private static ArrayList<Button> downButtons = new ArrayList<>();
+    private static ArrayList<Button> controlButtons = new ArrayList<>();
+    private static ArrayList<Rectangle> upIndicators = new ArrayList<>();
+    private static ArrayList<Text> floorNumberIndicators = new ArrayList<>();
+    private static ArrayList<Rectangle> downIndicators = new ArrayList<>();
+    private static Rectangle liftUpRectangle;
+    private static Rectangle liftDownRectangle;
+    private static Text liftFloorText;
+    private static AnchorPane liftObject;
+    static int numberOfFloors = 7;
+
+    private static Cabin myCabin = new Cabin();
+    private static Controller controller = new Controller(myCabin);
+    private static
     TranslateTransition tt;
 
     public static void main(String[] args) {
+
+        controller.moveCabin();
         Application.launch(Test2.class, args);
     }
 
@@ -317,25 +325,33 @@ public class Test2 extends Application {
 
     @FXML
     public void goUp(Event event) {
+        System.out.println(controller.cabinMovement);
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(7);
+        controller.addInPath(controller, Integer.parseInt(result), Movement.UP);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO UP");
     }
 
     @FXML
     public void goDown(Event event) {
+        System.out.println(controller.cabinMovement);
+
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(9);
+        controller.addInPath(controller, Integer.parseInt(result), Movement.DOWN);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO DOWN");
     }
 
     @FXML
     public void goTo(Event event) {
+        System.out.println(controller.cabinMovement);
+
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(3);
+        controller.addInPath(controller, Integer.parseInt(result)+1);
         messagesText.setText("MAKE LIFT GO TO FLOOR " + result);
     }
 

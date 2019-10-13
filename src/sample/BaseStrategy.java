@@ -1,72 +1,77 @@
 package sample;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 public class BaseStrategy implements Strategy {
 
+    Test2 test2;
+
+    public BaseStrategy(Test2 test2) {
+        this.test2 = test2;
+    }
+
     @Override
     public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
-        if(!controller.upList.contains(floorDest)  && !controller.downList.contains(floorDest)  && !controller.upListNext.contains(floorDest)  && !controller.downListNext.contains(floorDest)) return;
+        if (controller.upList.contains(floorDest) || controller.downList.contains(floorDest) || controller.upListNext.contains(floorDest) || controller.downListNext.contains(floorDest))
+            return;
 
-        if(controller.cabinMovement.equals(Movement.STOP)){
-            if(controller.currentFloor < floorDest)
+        if (requestedMovement.equals(Movement.UP)) {
+            test2.changeButtonColor(floorDest, true, true);
+            if(controller.currentFloor > floorDest)
+                controller.upListNext.add(floorDest);
+            else
                 controller.upList.add(floorDest);
+            if(controller.destination<controller.upList.get(0))
+                controller.destination = floorDest;
+            Collections.sort(controller.upList);
+            Collections.sort(controller.upListNext);
+        }
+        else {
+            test2.changeButtonColor(floorDest, true, false);
+            if(controller.currentFloor < floorDest)
+                controller.downListNext.add(floorDest);
             else
                 controller.downList.add(floorDest);
-            controller.destination = floorDest;
-        }
-        else if(controller.cabinMovement.equals(Movement.UP)){
-            if(requestedMovement.equals(Movement.UP)){
-                if(controller.currentFloor + 1 < floorDest) {
-                    controller.upList.add(floorDest);
-                    Collections.sort(controller.upList);
-                    controller.destination = controller.upList.get(0);
-                }
-                else{
-                    controller.upListNext.add(floorDest);
-                    Collections.sort(controller.upList);
-                }
-            }
-            else{
-                controller.downList.add(floorDest);
-                Collections.sort(controller.downList, Collections.reverseOrder());
-            }
-        }
-        else{
-            if(requestedMovement.equals(Movement.DOWN)){
-                if(controller.currentFloor - 1 > floorDest){
-                    controller.downList.add(floorDest);
-                    Collections.sort(controller.downList, Collections.reverseOrder());
-                    controller.destination = controller.downList.get(0);
-                }
-                else{
-                    controller.downListNext.add(floorDest);
-                    Collections.sort(controller.downList);
-                }
-            }
-            else{
-                controller.upList.add(floorDest);
-                Collections.sort(controller.upList);
-            }
+            if(controller.destination<controller.downList.get(0))
+                controller.destination = floorDest;
+            Collections.sort(controller.downList, Collections.reverseOrder());
+            Collections.sort(controller.downListNext, Collections.reverseOrder());
         }
     }
 
     @Override
     public void addInPath(Controller controller, int floorDest) {
-        if(!controller.upList.contains(floorDest)  && !controller.downList.contains(floorDest)  && !controller.upListNext.contains(floorDest)  && !controller.downListNext.contains(floorDest)) return;
-        if(controller.currentFloor < floorDest){
-            controller.upList.add(floorDest);
-            Collections.sort(controller.upList);
-            if(controller.cabinMovement.equals(Movement.UP))
-                controller.destination = controller.upList.get(0);
+        if (controller.upList.contains(floorDest - 1 ) || controller.downList.contains(floorDest - 1 ) || controller.upListNext.contains(floorDest - 1 ) || controller.downListNext.contains(floorDest - 1))
+            return;
+
+        test2.changeLiftButtonColor(floorDest, true);
+
+        if(controller.cabinMovement.equals(Movement.STOP)){
+            if(controller.currentFloor < floorDest - 1)
+                controller.upList.add(floorDest - 1);
+            else
+                controller.downList.add(floorDest - 1);
         }
-        else{
-            controller.downList.add(floorDest);
-            Collections.sort(controller.upList, Collections.reverseOrder());
-            if(controller.cabinMovement.equals(Movement.DOWN))
-                controller.destination = controller.downList.get(0);
+
+        else if(controller.currentFloor < floorDest -1) {
+            if(controller.cabinMovement.equals(Movement.UP)) {
+                controller.upList.add(floorDest - 1);
+                if (floorDest - 1 < controller.destination)
+                    controller.destination = floorDest - 1;
+            }
+            else
+                controller.downList.add(floorDest - 1);
         }
+        else {
+            if(controller.cabinMovement.equals(Movement.DOWN)) {
+                controller.downList.add(floorDest - 1);
+                if (floorDest - 1 > controller.destination)
+                    controller.destination = floorDest - 1;
+            }
+            else
+                controller.upList.add(floorDest - 1);
+        }
+        Collections.sort(controller.downList, Collections.reverseOrder());
+        Collections.sort(controller.upList);
     }
 }
