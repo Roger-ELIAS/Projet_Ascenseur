@@ -6,7 +6,7 @@ public class Cabin {
     boolean stopNext = false;
     boolean stop = false;
     Controller controller;
-    FloorSensor sensor = new FloorSensor();
+    FloorSensor sensor;
     Motor simpleMotor;
 
     public void setController(Controller controller) {
@@ -17,37 +17,45 @@ public class Cabin {
     public class FloorSensor extends Thread {
         public void run() {
             try {
-                while(!stopNext) {
-                    System.out.println(controller.currentFloor);
+                while(true) {
                     if (controller.desynchTime == 0) {
                         sleep(1000);
-                    } else {
+                    }
+                    else {
                         long time = (long) controller.desynchTime / 1000000;
-                        if (controller.cabinMovement.equals(Movement.UP))
+                        if (controller.cabinDirection.equals(Movement.UP))
                             sleep(1000 - time);
                         else
                             sleep(time);
                         controller.desynchTime = 0;
                     }
-                    System.out.println("I passed a floor");
-                    controller.sendNotif();
-                    System.out.println(controller.currentFloor);
-
-                    if (stopNext) {
-                        stop = true;
+                    if(!stopNext) {
+                        System.out.println("I passed a floor");
+                        controller.sendNotif();
+                        System.out.println(controller.currentFloor);
+                    }
+                    else{
+                        isMoving = false;
+                        sleep(5000);
+                        System.out.println("Exiting");
+                        stopNext = false;
+                        this.interrupt();
                     }
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                if(isInterrupted())
+                    this.interrupt();
             }
         }
     }
 
 
-    public void goUp(){
+    public void goUp() {
         if(isMoving) return;
         isMoving=true;
+        controller.cabinDirection = Movement.UP;
         simpleMotor.goUp();
+        sensor = new FloorSensor();
         sensor.start();
 
     }
@@ -55,7 +63,9 @@ public class Cabin {
     public void goDown(){
         if(isMoving) return;
         isMoving=true;
+        controller.cabinDirection = Movement.DOWN;
         simpleMotor.goDown();
+        sensor = new FloorSensor();
         sensor.start();
     }
 
@@ -66,7 +76,6 @@ public class Cabin {
     public void stopNext(){
         System.out.println("The cabin will stop at the next floor");
         simpleMotor.stopNext();
-        sensor.interrupt();
         stopNext = true;
     }
 }

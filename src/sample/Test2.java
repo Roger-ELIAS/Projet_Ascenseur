@@ -331,7 +331,7 @@ public class Test2 extends Application {
         String id = btn.getId();
         String result = id.substring(7);
         controller.addInPath(controller, Integer.parseInt(result), Movement.UP);
-        System.out.println(controller.cabinMovement);
+        System.out.println(controller.cabinDirection);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO UP");
     }
 
@@ -341,18 +341,17 @@ public class Test2 extends Application {
         String id = btn.getId();
         String result = id.substring(9);
         controller.addInPath(controller, Integer.parseInt(result), Movement.DOWN);
-        System.out.println(controller.cabinMovement);
+        System.out.println(controller.cabinDirection);
         messagesText.setText("PERSON AT FLOOR " + result + " WANT TO GO DOWN");
     }
 
     @FXML
     public void goTo(Event event) {
-
         Button btn = (Button) event.getSource();
         String id = btn.getId();
         String result = id.substring(3);
         controller.addInPath(controller, Integer.parseInt(result)+1);
-        System.out.println(controller.cabinMovement);
+        System.out.println(controller.cabinDirection);
         messagesText.setText("MAKE LIFT GO TO FLOOR " + result);
     }
 
