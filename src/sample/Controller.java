@@ -106,14 +106,19 @@ public class Controller {
                 }
             }
             if (cabinMovement.equals(Movement.UP)) {
-                System.out.println(upList);
                 while (!upList.isEmpty()) {
                     if(currentFloor < upList.get(0)) {
                         cabin.goUp() ;
                         if (destination == currentFloor + 1 || currentFloor + 1 == 6) {
                             cabin.stopNext();
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             upList.remove(upList.indexOf(destination));
-                            destination = upList.get(0);
+                            if(!upList.isEmpty())
+                                destination = upList.get(0);
                         }
                     }
                     else{

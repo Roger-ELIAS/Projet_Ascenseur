@@ -7,26 +7,35 @@ public class Cabin {
     boolean stop = false;
     Controller controller;
     FloorSensor sensor = new FloorSensor();
-    Motor simpleMotor = new SimpleMotor(controller);
+    Motor simpleMotor;
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+        this.simpleMotor = new SimpleMotor(controller);
+    }
 
     public class FloorSensor extends Thread {
         public void run() {
             try {
-                if(controller.desynchTime == 0) {
-                    sleep(1000);
-                }
-                else{
-                    long time = (long)controller.desynchTime/1000000;
-                    if(controller.cabinMovement.equals(Movement.UP))
-                        sleep(1000 - time);
-                    else
-                        sleep(time);
-                    controller.desynchTime = 0;
-                }
-                System.out.println("I passed a floor");
-                controller.sendNotif();
-                if(stopNext) {
-                    stop = true;
+                while(!stopNext) {
+                    System.out.println(controller.currentFloor);
+                    if (controller.desynchTime == 0) {
+                        sleep(1000);
+                    } else {
+                        long time = (long) controller.desynchTime / 1000000;
+                        if (controller.cabinMovement.equals(Movement.UP))
+                            sleep(1000 - time);
+                        else
+                            sleep(time);
+                        controller.desynchTime = 0;
+                    }
+                    System.out.println("I passed a floor");
+                    controller.sendNotif();
+                    System.out.println(controller.currentFloor);
+
+                    if (stopNext) {
+                        stop = true;
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -36,37 +45,18 @@ public class Cabin {
 
 
     public void goUp(){
-        System.out.println("The cabin goes up");
         if(isMoving) return;
         isMoving=true;
         simpleMotor.goUp();
         sensor.start();
-        try {
-            sensor.join();
-            while(!stop) {
-                sensor.start();
-                sensor.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void goDown(){
-        System.out.println("The cabin goes down");
         if(isMoving) return;
         isMoving=true;
         simpleMotor.goDown();
         sensor.start();
-        try {
-            sensor.join();
-            while(!stop) {
-                sensor.start();
-                sensor.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void emergencyStop(){
@@ -76,6 +66,7 @@ public class Cabin {
     public void stopNext(){
         System.out.println("The cabin will stop at the next floor");
         simpleMotor.stopNext();
+        sensor.interrupt();
         stopNext = true;
     }
 }

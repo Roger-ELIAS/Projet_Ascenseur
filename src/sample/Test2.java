@@ -44,9 +44,10 @@ public class Test2 extends Application {
     private static TranslateTransition tt;
 
     public static void main(String[] args) {
-
+        myCabin.setController(controller);
         controller.moveCabin();
         Application.launch(Test2.class, args);
+
     }
 
     public void generateWindow(AnchorPane window){
@@ -111,6 +112,8 @@ public class Test2 extends Application {
         liftContainer.getChildren().addAll(liftFloorIndicator, liftPeopleRenderer);
         lift.getChildren().add(liftContainer);
         window.getChildren().add(lift);
+
+        startMovingLift(6, false);
     }
 
     public void generateControlPanel(AnchorPane window, int numberOfFloors){
