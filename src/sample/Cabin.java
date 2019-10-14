@@ -7,16 +7,35 @@ public class Cabin {
     boolean stop = false;
     Controller controller;
     FloorSensor sensor = new FloorSensor();
+    Motor simpleMotor;
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+        this.simpleMotor = new SimpleMotor(controller);
+    }
 
     public class FloorSensor extends Thread {
         public void run() {
             try {
-                sleep(1000);
-                System.out.println("I passed a floor");
-                controller.sendNotif();
-                if(stopNext) {
-                    stop = true;
+                while(!stopNext) {
+                    System.out.println(controller.currentFloor);
+                    if (controller.desynchTime == 0) {
+                        sleep(1000);
+                    } else {
+                        long time = (long) controller.desynchTime / 1000000;
+                        if (controller.cabinMovement.equals(Movement.UP))
+                            sleep(1000 - time);
+                        else
+                            sleep(time);
+                        controller.desynchTime = 0;
+                    }
+                    System.out.println("I passed a floor");
+                    controller.sendNotif();
+                    System.out.println(controller.currentFloor);
+
+                    if (stopNext) {
+                        stop = true;
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -28,32 +47,26 @@ public class Cabin {
     public void goUp(){
         if(isMoving) return;
         isMoving=true;
-        System.out.println("The cabin goes up");
+        simpleMotor.goUp();
         sensor.start();
-        try {
-            sensor.join();
-            while(!stop) {
-                sensor.start();
-                sensor.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void goDown(){
         if(isMoving) return;
         isMoving=true;
-        System.out.println("The cabin goes down");
+        simpleMotor.goDown();
+        sensor.start();
     }
 
     public void emergencyStop(){
-        System.out.println("Instantly stop the cabin");
-        sensor.interrupt();
+        simpleMotor.emergencyStop();
     }
 
     public void stopNext(){
-        System.out.println("The cabin will stop to the next floor");
+        System.out.println("The cabin will stop at the next floor");
+        simpleMotor.stopNext();
+        sensor.interrupt();
         stopNext = true;
     }
 }

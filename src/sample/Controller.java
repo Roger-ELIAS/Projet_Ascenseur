@@ -2,102 +2,175 @@ package sample;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class Controller {
 
-    Object object = new Object();
+    Cabin cabin;
+    Strategy movingStrategy;
+    int currentFloor = 0;
+    Movement cabinMovement;
+    int destination;
+    boolean emergencyStopped = false;
+    float startTime = 0;
+    float stoppedTime = 0;
+    float desynchTime = 0;
+    CabinMover cabinMover;
 
-    private volatile int currentFloor = 0;
-    private Cabin cabin;
-    private Strategy strategy;
+    ArrayList<Integer> upList = new ArrayList<>();
+    ArrayList<Integer> downList = new ArrayList<>();
+    ArrayList<Integer> upListNext = new ArrayList<>();
+    ArrayList<Integer> downListNext = new ArrayList<>();
 
-    private Movement cabinMovement = Movement.STOP;
-
-    private ArrayList<Integer> currentPath = new ArrayList<>();
-    private ArrayList<Integer> missingPath = new ArrayList<>();
-
-
-    public void callLift(int floor, String direction){
-        String formatedDirection;
-        if(direction.equals("upFloor"))
-            formatedDirection = "UP";
+    public void sendNotif(){
+        if(cabinMovement.equals(Movement.UP))
+            currentFloor++;
         else
-            formatedDirection = "DO";
-        strategy.addInPath(this,formatedDirection + Integer.toString(floor));
+            currentFloor--;
+        startTime = System.nanoTime();
     }
 
-    public void goTo(int floor){
-        strategy.addInPath(this,"GO" + Integer.toString(floor));
+    public Controller(Cabin cabin) {
+        this.cabinMovement = Movement.STOP;
+        this.cabin = cabin;
+        this.movingStrategy = new BaseStrategy();
+    }
+
+    public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
+        if(cabinMovement.equals(Movement.STOP)){
+            if(controller.currentFloor < floorDest)
+                controller.cabinMovement = Movement.UP;
+            else if(controller.currentFloor > floorDest)
+                controller.cabinMovement = Movement.DOWN;
+            else
+                controller.cabinMovement = Movement.STOP;
+        }
+
+        movingStrategy.addInPath(this, floorDest, requestedMovement);
+    }
+
+    public void addInPath(Controller controller, int floorDest){
+
+        if(cabinMovement.equals(Movement.STOP)){
+            if(controller.currentFloor < floorDest - 1 ) {
+                controller.cabinMovement = Movement.UP;
+            }
+            else if(controller.currentFloor > floorDest - 1) {
+                controller.cabinMovement = Movement.DOWN;
+            }
+            else
+                controller.cabinMovement = Movement.STOP;
+        }
+
+        movingStrategy.addInPath(this, floorDest);
     }
 
     public void emergencyStop(){
-        cabin.emergencyStop();
+        emergencyStopped = true;
         cabinMovement = Movement.STOP;
-        currentPath = new ArrayList<>();
-        missingPath = new ArrayList<>();
+        upList = new ArrayList<>();
+        downList = new ArrayList<>();
+        upListNext = new ArrayList<>();
+        downListNext = new ArrayList<>();
+        stoppedTime = System.nanoTime();
+        cabinMover.interrupt();
+        desynchTime = stoppedTime - startTime;
+        moveCabin();
     }
 
-    public void move(){
-        while(true){
-            if(!currentPath.isEmpty()){
-                if(currentPath.get(0) > currentFloor) {
-                    if(currentFloor == 6) return;
-                    GoUpThread t = new GoUpThread();
-                    t.start();
-                    if(currentFloor + 1 == currentPath.get(0)) {
-                        cabin.stopNext();
-                        currentPath.remove(0);
+    public int getMaxTravelValue(){
+        if(cabinMovement.equals(Movement.DOWN))
+            return currentFloor;
+        else
+            return 7 - currentFloor;
+    }
+
+    public class CabinMover extends Thread {
+        public void run(){
+            howToMoveCabin();
+        }
+    }
+
+    public void moveCabin(){
+        cabinMover = new CabinMover();
+        cabinMover.start();
+    }
+
+    public void howToMoveCabin() {
+        while (!emergencyStopped) {
+            while(cabinMovement.equals(Movement.STOP)) {
+                try {
+                    sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (cabinMovement.equals(Movement.UP)) {
+                while (!upList.isEmpty()) {
+                    if(currentFloor < upList.get(0)) {
+                        cabin.goUp() ;
+                        if (destination == currentFloor + 1 || currentFloor + 1 == 6) {
+                            cabin.stopNext();
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            upList.remove(upList.indexOf(destination));
+                            if(!upList.isEmpty())
+                                destination = upList.get(0);
+                        }
+                    }
+                    else{
+                        cabin.goDown();
+                        if(destination == currentFloor - 1 || currentFloor - 1 == 0 ){
+                            cabin.stopNext();
+                            upList.remove(upList.indexOf(destination));
+                            destination = upList.get(0);
+                        }
                     }
                 }
-                else {
-                    if(currentFloor == 0) return;
-                    GoDownThread t = new GoDownThread();
-                    t.start();
+                if(!downList.isEmpty() || !downListNext.isEmpty())
+                    cabinMovement = Movement.DOWN;
+
+                if(!upListNext.isEmpty()) {
+                    upList = upListNext;
+                    upListNext = new ArrayList<>();
                 }
             }
-            else{
-                if(!missingPath.isEmpty()) {
-                    currentPath = missingPath;
-                    missingPath = new ArrayList<>();
+            else {
+                if (!downList.isEmpty()) {
+                    while (!downList.isEmpty()) {
+                        if(currentFloor > downList.get(0)) {
+                            cabin.goDown();
+                            if (destination == currentFloor - 1 || currentFloor - 1 == 0) {
+                                cabin.stopNext();
+                                downList.remove(downList.indexOf(destination));
+                                destination = downList.get(0);
+                            }
+                        }
+                        else{
+                            cabin.goUp();
+                            if(destination == currentFloor  + 1 || currentFloor + 1 == 0 ){
+                                cabin.stopNext();
+                                downList.remove(downList.indexOf(destination));
+                                destination = downList.get(0);
+                            }
+                        }
+                    }
+                    if(!upList.isEmpty() || !upListNext.isEmpty()){
+                        cabinMovement = Movement.UP;
+                        if(upList.isEmpty() && !upListNext.isEmpty()) {
+                            upList = upListNext;
+                            upListNext = new ArrayList<>();
+                        }
+                    }
                 }
             }
+
         }
-    }
 
-    public int getCurrentFloor() {
-        return currentFloor;
-    }
-
-    public Movement getCabinMovement() {
-        return cabinMovement;
-    }
-
-    public ArrayList<Integer> getCurrentPath() {
-        return currentPath;
-    }
-
-    public ArrayList<Integer> getMissingPath() {
-        return missingPath;
-    }
-
-    public void sendNotif(){
-        synchronized (object) {
-            if (cabinMovement.equals(Movement.UP)) {
-                ++currentFloor;
-            } else {
-                --currentFloor;
-            }
-        }
-    }
-
-    public class GoUpThread extends Thread {
-        public void run(){
-            cabin.goUp();
-        }
-    }
-
-    public class GoDownThread extends Thread {
-        public void run(){
-            cabin.goDown();
-        }
     }
 }
+
+
