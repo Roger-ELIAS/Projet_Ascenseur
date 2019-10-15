@@ -43,7 +43,7 @@ public class BaseStrategy implements Strategy {
             if(controller.currentFloor < floorDest - 1)
                 controller.upList.add(floorDest - 1);
             else
-                controller.downList.add(floorDest - 1);
+                controller.upListNext.add(floorDest - 1);
         }
 
         else if(controller.currentFloor < floorDest -1) {
@@ -62,7 +62,7 @@ public class BaseStrategy implements Strategy {
                     controller.destination = floorDest - 1;
             }
             else
-                controller.upList.add(floorDest - 1);
+                controller.downListNext.add(floorDest - 1);
         }
         Collections.sort(controller.downList, Collections.reverseOrder());
         Collections.sort(controller.upList);
