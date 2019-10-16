@@ -11,11 +11,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.*;
@@ -37,7 +40,7 @@ public class Test2 extends Application {
     private static Rectangle liftDownRectangle;
     private static Text liftFloorText;
     private static AnchorPane liftObject;
-    static int numberOfFloors = 7;
+    static int numberOfFloors = 0;
 
     private static Cabin myCabin = new Cabin();
     private static Controller controller = new Controller(myCabin);
@@ -47,7 +50,6 @@ public class Test2 extends Application {
         myCabin.setController(controller);
         controller.moveCabin();
         Application.launch(Test2.class, args);
-
     }
 
     public void generateWindow(AnchorPane window){
@@ -280,12 +282,59 @@ public class Test2 extends Application {
         }
     }
 
-    public int fl = 0;
+    public void generateFWindow(AnchorPane fWindow, Group root, Stage primaryStage, Scene scene){
+        fWindow.setPrefHeight(270);
+        fWindow.setPrefWidth(480);
+        fWindow.setStyle("-fx-background-color: #333333;");
+        HBox hContainer = new HBox();
+        hContainer.setAlignment(Pos.CENTER);
+        hContainer.setPrefWidth(480);
+        hContainer.setPrefHeight(270);
+        VBox vContainer = new VBox();
+        vContainer.setAlignment(Pos.CENTER);
+        vContainer.setPrefHeight(270);
+        vContainer.setPrefWidth(480);
+        Label label = new Label();
+        label.setAlignment(Pos.CENTER);
+        label.setContentDisplay(ContentDisplay.CENTER);
+        label.setPrefHeight(18);
+        label.setPrefWidth(146);
+        label.setText("Number of floors");
+        label.setTextFill(Color.WHITE);
+        TextField txtField = new TextField();
+        Button ok = new Button();
+        ok.setMnemonicParsing(false);
+        ok.setText("OK");
+        ok.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                numberOfFloors = Integer.parseInt(txtField.getText());
+                mainWindow(root, primaryStage, scene);
+            }
+        });
+        vContainer.getChildren().addAll(label, txtField, ok);
+        hContainer.getChildren().add(vContainer);
+        fWindow.getChildren().add(hContainer);
+    }
+
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
         Scene scene = new Scene(root, 960, 540, Color.web("#333333"));
+        //ARG WINDOW
+        primaryStage.setScene(scene);
 
+        AnchorPane fWindow = new AnchorPane();
+        generateFWindow(fWindow, root, primaryStage, scene);
+
+        root.getChildren().add(fWindow);
+        primaryStage.show();
+
+    }
+
+    public void mainWindow(Group root, Stage primaryStage, Scene scene){
+        //MAIN WINDOW
+        root.getChildren().clear();
         primaryStage.setScene(scene);
 
         AnchorPane window = new AnchorPane();
