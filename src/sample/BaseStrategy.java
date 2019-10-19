@@ -12,7 +12,7 @@ public class BaseStrategy implements Strategy {
             return;
 
         if (requestedMovement.equals(Movement.UP)) {
-            Test2.changeButtonColor(floorDest, true, true);
+            MainWindow.changeButtonColor(floorDest, true, true);
             if(controller.currentFloor > floorDest)
                 controller.upListNext.add(floorDest);
             else {
@@ -24,7 +24,7 @@ public class BaseStrategy implements Strategy {
             Collections.sort(controller.upListNext);
         }
         else {
-            Test2.changeButtonColor(floorDest, true, false);
+            MainWindow.changeButtonColor(floorDest, true, false);
             if(controller.currentFloor < floorDest)
                 controller.downListNext.add(floorDest);
             else {
@@ -40,7 +40,7 @@ public class BaseStrategy implements Strategy {
     @Override
     public void addInPath(Controller controller, int floorDest) {
 
-        Test2.changeLiftButtonColor(floorDest, true);
+        MainWindow.changeLiftButtonColor(floorDest, true);
 
         if(controller.cabinDirection.equals(Movement.STOP)){
             if(controller.currentFloor < floorDest - 1)
@@ -95,8 +95,8 @@ public class BaseStrategy implements Strategy {
                         if (!controller.downList.isEmpty())
                             controller.destination = controller.downList.get(0);
                         controller.cabin.goDown();
-                        Test2.changeIndicatorColor(true, false);
-                        Test2.changeIndicatorColor(false, true);
+                        MainWindow.changeIndicatorColor(true, false);
+                        MainWindow.changeIndicatorColor(false, true);
                         try {
                             sleep(1);
                         } catch (InterruptedException e) {
@@ -105,10 +105,10 @@ public class BaseStrategy implements Strategy {
                         if (controller.currentFloor - 1 == firstDestination) {
                             controller.cabin.stopNext();
                             controller.cabin.stop();
-                            Test2.changeButtonColor(firstDestination, false, true);
-                            Test2.changeLiftButtonColor(firstDestination + 1, false);
-                            Test2.changeIndicatorColor(false, true);
-                            Test2.changeIndicatorColor(false, false);
+                            MainWindow.changeButtonColor(firstDestination, false, true);
+                            MainWindow.changeLiftButtonColor(firstDestination + 1, false);
+                            MainWindow.changeIndicatorColor(false, true);
+                            MainWindow.changeIndicatorColor(false, false);
 
                             controller.upList.remove(controller.upList.indexOf(firstDestination));
                             try {
@@ -120,10 +120,10 @@ public class BaseStrategy implements Strategy {
                             controller.cabin.stopNext();
                             controller.cabin.stop();
                             int tmpDestination = controller.destination;
-                            Test2.changeButtonColor(tmpDestination, false, false);
-                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
-                            Test2.changeIndicatorColor(false, true);
-                            Test2.changeIndicatorColor(false, false);
+                            MainWindow.changeButtonColor(tmpDestination, false, false);
+                            MainWindow.changeLiftButtonColor(tmpDestination + 1, false);
+                            MainWindow.changeIndicatorColor(false, true);
+                            MainWindow.changeIndicatorColor(false, false);
                             try {
                                 controller.cabin.sensor.join();
                             } catch (InterruptedException e) {
@@ -137,22 +137,22 @@ public class BaseStrategy implements Strategy {
                     }
                 } else {
                     controller.cabin.goUp();
-                    Test2.changeIndicatorColor(true, true);
-                    Test2.changeIndicatorColor(false, false);
+                    MainWindow.changeIndicatorColor(true, true);
+                    MainWindow.changeIndicatorColor(false, false);
 
                     try {
                         sleep(1);
                     } catch (InterruptedException e) {
                         System.out.println("Sleep interrupted");
                     }
-                    if (controller.currentFloor + 1 == Test2.numberOfFloors || controller.currentFloor + 1 == controller.destination) {
+                    if (controller.currentFloor + 1 == MainWindow.numberOfFloors || controller.currentFloor + 1 == controller.destination) {
                         controller.cabin.stopNext();
                         controller.cabin.stop();
                         int tmpDestination = controller.destination;
-                        Test2.changeButtonColor(tmpDestination, false, true);
-                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
-                        Test2.changeIndicatorColor(false, true);
-                        Test2.changeIndicatorColor(false, false);
+                        MainWindow.changeButtonColor(tmpDestination, false, true);
+                        MainWindow.changeLiftButtonColor(tmpDestination + 1, false);
+                        MainWindow.changeIndicatorColor(false, true);
+                        MainWindow.changeIndicatorColor(false, false);
                         try {
                             controller.cabin.sensor.join();
                         } catch (InterruptedException e) {
@@ -174,12 +174,12 @@ public class BaseStrategy implements Strategy {
                 controller.destination = controller.downList.get(0);
                 if (controller.destination > controller.currentFloor) {
                     int firstDestination = controller.destination;
-                    while (controller.currentFloor + 1 < firstDestination || controller.currentFloor + 1 > Test2.numberOfFloors) {
+                    while (controller.currentFloor + 1 < firstDestination || controller.currentFloor + 1 > MainWindow.numberOfFloors) {
                         if (!controller.upList.isEmpty())
                             controller.destination = controller.upList.get(0);
                         controller.cabin.goUp();
-                        Test2.changeIndicatorColor(true, true);
-                        Test2.changeIndicatorColor(false, false);
+                        MainWindow.changeIndicatorColor(true, true);
+                        MainWindow.changeIndicatorColor(false, false);
 
                         try {
                             sleep(1);
@@ -189,24 +189,24 @@ public class BaseStrategy implements Strategy {
                         if (controller.currentFloor + 1 == firstDestination) {
                             controller.cabin.stopNext();
                             controller.cabin.stop();
-                            Test2.changeButtonColor(firstDestination, false, false);
-                            Test2.changeLiftButtonColor(firstDestination + 1, false);
-                            Test2.changeIndicatorColor(false, true);
-                            Test2.changeIndicatorColor(false, false);
+                            MainWindow.changeButtonColor(firstDestination, false, false);
+                            MainWindow.changeLiftButtonColor(firstDestination + 1, false);
+                            MainWindow.changeIndicatorColor(false, true);
+                            MainWindow.changeIndicatorColor(false, false);
                             controller.downList.remove(controller.downList.indexOf(firstDestination));
                             try {
                                 controller.cabin.sensor.join();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                        } else if (controller.currentFloor + 1 == controller.destination || controller.currentFloor + 1 == Test2.numberOfFloors) {
+                        } else if (controller.currentFloor + 1 == controller.destination || controller.currentFloor + 1 == MainWindow.numberOfFloors) {
                             controller.cabin.stopNext();
                             controller.cabin.stop();
                             int tmpDestination = controller.destination;
-                            Test2.changeButtonColor(tmpDestination, false, true);
-                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
-                            Test2.changeIndicatorColor(false, true);
-                            Test2.changeIndicatorColor(false, false);
+                            MainWindow.changeButtonColor(tmpDestination, false, true);
+                            MainWindow.changeLiftButtonColor(tmpDestination + 1, false);
+                            MainWindow.changeIndicatorColor(false, true);
+                            MainWindow.changeIndicatorColor(false, false);
                             try {
                                 controller.cabin.sensor.join();
                             } catch (InterruptedException e) {
@@ -220,8 +220,8 @@ public class BaseStrategy implements Strategy {
                     }
                 } else {
                     controller.cabin.goDown();
-                    Test2.changeIndicatorColor(true, false);
-                    Test2.changeIndicatorColor(false, true);
+                    MainWindow.changeIndicatorColor(true, false);
+                    MainWindow.changeIndicatorColor(false, true);
 
                     try {
                         sleep(1);
@@ -232,10 +232,10 @@ public class BaseStrategy implements Strategy {
                         controller.cabin.stopNext();
                         controller.cabin.stop();
                         int tmpDestination = controller.destination;
-                        Test2.changeButtonColor(tmpDestination, false, false);
-                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
-                        Test2.changeIndicatorColor(false, true);
-                        Test2.changeIndicatorColor(false, false);
+                        MainWindow.changeButtonColor(tmpDestination, false, false);
+                        MainWindow.changeLiftButtonColor(tmpDestination + 1, false);
+                        MainWindow.changeIndicatorColor(false, true);
+                        MainWindow.changeIndicatorColor(false, false);
                         try {
                             controller.cabin.sensor.join();
                         } catch (InterruptedException e) {

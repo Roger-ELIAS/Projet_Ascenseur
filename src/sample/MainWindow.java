@@ -18,7 +18,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.*;
@@ -28,7 +27,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Test2 extends Application {
+public class MainWindow extends Application {
 
     private static ArrayList<Button> upButtons = new ArrayList<>();
     private static ArrayList<Button> downButtons = new ArrayList<>();
@@ -53,7 +52,7 @@ public class Test2 extends Application {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Application.launch(Test2.class, args);
+        Application.launch(MainWindow.class, args);
     }
 
     public void generateWindow(AnchorPane window){
@@ -369,10 +368,8 @@ public class Test2 extends Application {
     }
 
     @FXML
-    private Label messagesText ;
-
+    private Label messagesText;
     private boolean fullStopDoubleClicked = false;
-
     @FXML
     public void fullStop(Event event) {
         Button btn = (Button) event.getSource();
@@ -388,7 +385,6 @@ public class Test2 extends Application {
             fullStopDoubleClicked = false;
         }
     }
-
     @FXML
     public void goUp(Event event) {
         Button btn = (Button) event.getSource();

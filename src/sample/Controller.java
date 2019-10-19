@@ -1,7 +1,5 @@
 package sample;
 
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -32,8 +30,8 @@ public class Controller {
         else if (cabinDirection.equals(Movement.DOWN))
             currentFloor--;
         startTime = System.nanoTime();
-        Test2.changeLiftText(currentFloor);
-        Test2.changeFloorText(currentFloor);
+        MainWindow.changeLiftText(currentFloor);
+        MainWindow.changeFloorText(currentFloor);
 
     }
 
@@ -70,8 +68,8 @@ public class Controller {
     }
 
     public void emergencyStop() {
-        Test2.changeLiftButtonColor( 0, true);
-        Test2.turnOffIndicators();
+        MainWindow.changeLiftButtonColor( 0, true);
+        MainWindow.turnOffIndicators();
         emergencyStopped = true;
         cabinDirection = Movement.STOP;
         cabin.isMoving = false;
@@ -95,7 +93,7 @@ public class Controller {
 
     public void stopEmergencyStop(){
         emergencyStopped = false;
-        Test2.changeLiftButtonColor( 0, false);
+        MainWindow.changeLiftButtonColor( 0, false);
 
     }
 
@@ -103,7 +101,7 @@ public class Controller {
         if (cabinDirection.equals(Movement.DOWN))
             return currentFloor;
         else
-            return Test2.numberOfFloors - currentFloor;
+            return MainWindow.numberOfFloors - currentFloor;
     }
 
     public class CabinMover extends Thread {

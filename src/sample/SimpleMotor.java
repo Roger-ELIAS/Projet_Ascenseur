@@ -12,19 +12,19 @@ public class SimpleMotor implements Motor {
 
     @Override
     public void goUp() {
-        Test2.startMovingLift(controller.getMaxTravelValue(), true);
+        MainWindow.startMovingLift(controller.getMaxTravelValue(), true);
     }
 
     @Override
     public void goDown() {
-        Test2.startMovingLift(controller.getMaxTravelValue(), false);
+        MainWindow.startMovingLift(controller.getMaxTravelValue(), false);
     }
 
     @Override
     public void stopNext() {
         try {
             sleep(1000);
-            Test2.stopMovingLift();
+            MainWindow.stopMovingLift();
         } catch (InterruptedException e) {
 
         }
@@ -32,6 +32,6 @@ public class SimpleMotor implements Motor {
 
     @Override
     public void emergencyStop() {
-        Test2.stopMovingLift();
+        MainWindow.stopMovingLift();
     }
 }
