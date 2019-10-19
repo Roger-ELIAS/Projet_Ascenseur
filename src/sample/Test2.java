@@ -410,6 +410,7 @@ public class Test2 extends Application {
     }
 
     static public void startMovingLift(int floorsLeft, boolean direction){
+        System.out.println(liftObject);
         tt = new TranslateTransition(Duration.millis(floorsLeft*1000), liftObject);
         if(direction){
             tt.setByY(-66 * floorsLeft);

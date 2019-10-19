@@ -6,8 +6,12 @@ public class Cabin {
     boolean stopNext = false;
     boolean stop = false;
     Controller controller;
-    FloorSensor sensor = new FloorSensor();
-    Motor simpleMotor = new SimpleMotor(controller);
+    FloorSensor sensor;
+    Motor simpleMotor;
+
+    public Cabin() {
+        simpleMotor = new SimpleMotor(controller);
+    }
 
     public class FloorSensor extends Thread {
         public void run() {
@@ -40,10 +44,14 @@ public class Cabin {
         if(isMoving) return;
         isMoving=true;
         simpleMotor.goUp();
-        sensor.start();
+        sensor = new FloorSensor();
+        if(sensor.getState().equals("NEW"))
+            sensor.start();
         try {
             sensor.join();
             while(!stop) {
+                if(sensor.getState().equals("TERMINATED"))
+                    sensor = new FloorSensor();
                 sensor.start();
                 sensor.join();
             }
@@ -57,10 +65,12 @@ public class Cabin {
         if(isMoving) return;
         isMoving=true;
         simpleMotor.goDown();
+        sensor = new FloorSensor();
         sensor.start();
         try {
             sensor.join();
             while(!stop) {
+                sensor = new FloorSensor();
                 sensor.start();
                 sensor.join();
             }

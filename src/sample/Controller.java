@@ -8,7 +8,7 @@ public class Controller {
 
     Cabin cabin;
     Strategy movingStrategy;
-    int currentFloor = 0;
+    volatile int currentFloor = 0;
     Movement cabinMovement;
     int destination;
     boolean emergencyStopped = false;
@@ -82,7 +82,7 @@ public class Controller {
         if(cabinMovement.equals(Movement.DOWN))
             return currentFloor;
         else
-            return 7 - currentFloor;
+            return 6 - currentFloor;
     }
 
     public class CabinMover extends Thread {
@@ -113,7 +113,8 @@ public class Controller {
                         if (destination == currentFloor + 1 || currentFloor + 1 == 6) {
                             cabin.stopNext();
                             upList.remove(upList.indexOf(destination));
-                            destination = upList.get(0);
+                            if(!upList.isEmpty())
+                                destination = upList.get(0);
                         }
                     }
                     else{
@@ -121,7 +122,8 @@ public class Controller {
                         if(destination == currentFloor - 1 || currentFloor - 1 == 0 ){
                             cabin.stopNext();
                             upList.remove(upList.indexOf(destination));
-                            destination = upList.get(0);
+                            if(!downList.isEmpty())
+                                destination = upList.get(0);
                         }
                     }
                 }
@@ -141,7 +143,8 @@ public class Controller {
                             if (destination == currentFloor - 1 || currentFloor - 1 == 0) {
                                 cabin.stopNext();
                                 downList.remove(downList.indexOf(destination));
-                                destination = downList.get(0);
+                                if(!downList.isEmpty())
+                                    destination = downList.get(0);
                             }
                         }
                         else{
@@ -149,7 +152,8 @@ public class Controller {
                             if(destination == currentFloor  + 1 || currentFloor + 1 == 0 ){
                                 cabin.stopNext();
                                 downList.remove(downList.indexOf(destination));
-                                destination = downList.get(0);
+                                if(!downList.isEmpty())
+                                    destination = downList.get(0);
                             }
                         }
                     }
