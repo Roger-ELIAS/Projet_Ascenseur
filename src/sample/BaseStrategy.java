@@ -1,5 +1,8 @@
 package sample;
+import java.util.ArrayList;
 import java.util.Collections;
+
+import static java.lang.Thread.sleep;
 
 public class BaseStrategy implements Strategy {
 
@@ -67,4 +70,195 @@ public class BaseStrategy implements Strategy {
         Collections.sort(controller.downList, Collections.reverseOrder());
         Collections.sort(controller.upList);
     }
+
+    @Override
+    public void howToMove(Controller controller) {
+        while(controller.emergencyStopped) {
+            try {
+                sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        while (true) {
+            try {
+                sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            while (!controller.upList.isEmpty()) {
+                controller.destination = controller.upList.get(0);
+                if (controller.destination < controller.currentFloor) {
+                    int firstDestination = controller.destination;
+                    while (controller.currentFloor - 1 > firstDestination || controller.currentFloor - 1 > 0) {
+                        if (!controller.downList.isEmpty())
+                            controller.destination = controller.downList.get(0);
+                        controller.cabin.goDown();
+                        Test2.changeIndicatorColor(true, false);
+                        Test2.changeIndicatorColor(false, true);
+                        try {
+                            sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (controller.currentFloor - 1 == firstDestination) {
+                            controller.cabin.stopNext();
+                            controller.cabin.stop();
+                            Test2.changeButtonColor(firstDestination, false, true);
+                            Test2.changeLiftButtonColor(firstDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+
+                            controller.upList.remove(controller.upList.indexOf(firstDestination));
+                            try {
+                                controller.cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (controller.currentFloor - 1 == controller.destination || controller.currentFloor - 1 == 0) {
+                            controller.cabin.stopNext();
+                            controller.cabin.stop();
+                            int tmpDestination = controller.destination;
+                            Test2.changeButtonColor(tmpDestination, false, false);
+                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            try {
+                                controller.cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (!controller.downList.isEmpty()) {
+                                controller.downList.remove(controller.downList.indexOf(tmpDestination));
+                            }
+                        }
+
+                    }
+                } else {
+                    controller.cabin.goUp();
+                    Test2.changeIndicatorColor(true, true);
+                    Test2.changeIndicatorColor(false, false);
+
+                    try {
+                        sleep(1);
+                    } catch (InterruptedException e) {
+                        System.out.println("Sleep interrupted");
+                    }
+                    if (controller.currentFloor + 1 == Test2.numberOfFloors || controller.currentFloor + 1 == controller.destination) {
+                        controller.cabin.stopNext();
+                        controller.cabin.stop();
+                        int tmpDestination = controller.destination;
+                        Test2.changeButtonColor(tmpDestination, false, true);
+                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                        Test2.changeIndicatorColor(false, true);
+                        Test2.changeIndicatorColor(false, false);
+                        try {
+                            controller.cabin.sensor.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        controller.upList.remove(controller.upList.indexOf(tmpDestination));
+                    }
+                }
+                if (controller.upList.isEmpty() && !controller.upListNext.isEmpty()) {
+                    controller.upList = controller.upListNext;
+                    controller.upListNext = new ArrayList<>();
+                }
+                if (controller.downList.isEmpty() && !controller.downListNext.isEmpty()) {
+                    controller.downList = controller.downListNext;
+                    controller.downListNext = new ArrayList<>();
+                }
+            }
+            while (!controller.downList.isEmpty()) {
+                controller.destination = controller.downList.get(0);
+                if (controller.destination > controller.currentFloor) {
+                    int firstDestination = controller.destination;
+                    while (controller.currentFloor + 1 < firstDestination || controller.currentFloor + 1 > Test2.numberOfFloors) {
+                        if (!controller.upList.isEmpty())
+                            controller.destination = controller.upList.get(0);
+                        controller.cabin.goUp();
+                        Test2.changeIndicatorColor(true, true);
+                        Test2.changeIndicatorColor(false, false);
+
+                        try {
+                            sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (controller.currentFloor + 1 == firstDestination) {
+                            controller.cabin.stopNext();
+                            controller.cabin.stop();
+                            Test2.changeButtonColor(firstDestination, false, false);
+                            Test2.changeLiftButtonColor(firstDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            controller.downList.remove(controller.downList.indexOf(firstDestination));
+                            try {
+                                controller.cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (controller.currentFloor + 1 == controller.destination || controller.currentFloor + 1 == Test2.numberOfFloors) {
+                            controller.cabin.stopNext();
+                            controller.cabin.stop();
+                            int tmpDestination = controller.destination;
+                            Test2.changeButtonColor(tmpDestination, false, true);
+                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            try {
+                                controller.cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (!controller.upList.isEmpty()) {
+                                controller.upList.remove(controller.upList.indexOf(tmpDestination));
+                            }
+                        }
+
+                    }
+                } else {
+                    controller.cabin.goDown();
+                    Test2.changeIndicatorColor(true, false);
+                    Test2.changeIndicatorColor(false, true);
+
+                    try {
+                        sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (controller.currentFloor - 1 == 0 || controller.currentFloor - 1 == controller.destination) {
+                        controller.cabin.stopNext();
+                        controller.cabin.stop();
+                        int tmpDestination = controller.destination;
+                        Test2.changeButtonColor(tmpDestination, false, false);
+                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                        Test2.changeIndicatorColor(false, true);
+                        Test2.changeIndicatorColor(false, false);
+                        try {
+                            controller.cabin.sensor.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        controller.downList.remove(controller.downList.indexOf(tmpDestination));
+                    }
+                    if (controller.upList.isEmpty() && !controller.upListNext.isEmpty()) {
+                        controller.upList = controller.upListNext;
+                        controller.upListNext = new ArrayList<>();
+                    }
+                    if (controller.downList.isEmpty() && !controller.downListNext.isEmpty()) {
+                        controller.downList = controller.downListNext;
+                        controller.downListNext = new ArrayList<>();
+                    }
+                }
+                try {
+                    sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
+

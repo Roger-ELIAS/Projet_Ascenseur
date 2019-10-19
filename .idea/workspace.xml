@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fd793873-b3ea-4027-99cf-bc1ff4df0a44" name="Default Changelist" comment="">
+    <list default="true" id="fd793873-b3ea-4027-99cf-bc1ff4df0a44" name="Default Changelist" comment="Push final pour le .jar">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/BaseStrategy.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/BaseStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Cabin$FloorSensor.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Cabin$FloorSensor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Cabin.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Cabin.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Controller$CabinMover.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Controller$CabinMover.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Controller.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Controller.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$1.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$2.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$3.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$4.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$5.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Test2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Ascenseur/sample/Strategy.class" afterPath="$PROJECT_DIR$/out/production/Ascenseur/sample/Strategy.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/BaseStrategy.java" afterPath="$PROJECT_DIR$/src/sample/BaseStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Cabin.java" afterPath="$PROJECT_DIR$/src/sample/Cabin.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Controller.java" afterPath="$PROJECT_DIR$/src/sample/Controller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Test2.java" afterPath="$PROJECT_DIR$/src/sample/Test2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Strategy.java" afterPath="$PROJECT_DIR$/src/sample/Strategy.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -75,9 +66,11 @@
       <file leaf-file-name="BaseStrategy.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/BaseStrategy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="89" lean-forward="false" selection-start-line="7" selection-start-column="89" selection-end-line="7" selection-end-column="89" />
-              <folding />
+            <state relative-caret-position="1742">
+              <caret line="242" column="25" lean-forward="true" selection-start-line="242" selection-start-column="25" selection-end-line="242" selection-end-column="25" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,10 +78,12 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="73" column="34" lean-forward="true" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
+            <state relative-caret-position="391">
+              <caret line="125" column="37" lean-forward="false" selection-start-line="125" selection-start-column="37" selection-end-line="125" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3758#3759#0" expanded="true" />
+                <element signature="e#3804#3805#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -110,8 +105,8 @@
       <file leaf-file-name="Test2.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Test2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="509" column="9" lean-forward="true" selection-start-line="509" selection-start-column="9" selection-end-line="509" selection-end-column="9" />
+            <state relative-caret-position="442">
+              <caret line="518" column="0" lean-forward="true" selection-start-line="518" selection-start-column="0" selection-end-line="518" selection-end-column="0" />
               <folding>
                 <element signature="e#20160#20161#0" expanded="true" />
                 <element signature="e#20186#20187#0" expanded="true" />
@@ -125,6 +120,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-102">
               <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Strategy.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Strategy.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" column="47" lean-forward="false" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -192,14 +197,14 @@
         <option value="$PROJECT_DIR$/src/sample/ButtonHandler.java" />
         <option value="$PROJECT_DIR$/src/sample/FIFO.java" />
         <option value="$PROJECT_DIR$/src/sample/MovementEnum.java" />
-        <option value="$PROJECT_DIR$/src/sample/Strategy.java" />
         <option value="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
         <option value="$PROJECT_DIR$/src/sample/Motor.java" />
         <option value="$PROJECT_DIR$/src/Window.java" />
         <option value="$PROJECT_DIR$/src/sample/SimpleMotor.java" />
-        <option value="$PROJECT_DIR$/src/sample/BaseStrategy.java" />
         <option value="$PROJECT_DIR$/src/sample/Cabin.java" />
         <option value="$PROJECT_DIR$/src/sample/Test2.java" />
+        <option value="$PROJECT_DIR$/src/sample/BaseStrategy.java" />
+        <option value="$PROJECT_DIR$/src/sample/Strategy.java" />
         <option value="$PROJECT_DIR$/src/sample/Controller.java" />
       </list>
     </option>
@@ -519,7 +524,7 @@
       <workItem from="1571038897413" duration="1535000" />
       <workItem from="1571486870216" duration="1085000" />
       <workItem from="1571488102731" duration="282000" />
-      <workItem from="1571488408574" duration="23279000" />
+      <workItem from="1571488408574" duration="24120000" />
     </task>
     <task id="LOCAL-00001" summary="Finalisation du contrôle de mouvement de l'ascenseur">
       <created>1570890086186</created>
@@ -605,11 +610,18 @@
       <option name="project" value="LOCAL" />
       <updated>1571509984688</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Push final pour le .jar">
+      <created>1571514414187</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1571514414187</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97879000" />
+    <option name="totallyTimeSpent" value="98720000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -672,7 +684,8 @@
     <MESSAGE value="Start commit" />
     <MESSAGE value="Fin du mouvement &#10;Début de l'ajout des couleurs" />
     <MESSAGE value="Modification d'une arrayList" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modification d'une arrayList" />
+    <MESSAGE value="Push final pour le .jar" />
+    <option name="LAST_COMMIT_MESSAGE" value="Push final pour le .jar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -695,6 +708,8 @@
           <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -758,6 +773,8 @@
           <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -813,6 +830,8 @@
           <caret line="75" column="18" lean-forward="false" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -868,6 +887,8 @@
           <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -923,6 +944,8 @@
           <caret line="40" column="20" lean-forward="true" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -965,6 +988,8 @@
           <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1031,14 +1056,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Strategy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="90" lean-forward="false" selection-start-line="5" selection-start-column="90" selection-end-line="5" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -1068,26 +1085,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/BaseStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="89" lean-forward="false" selection-start-line="7" selection-start-column="89" selection-end-line="7" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="73" column="34" lean-forward="true" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
+        <state relative-caret-position="1742">
+          <caret line="242" column="25" lean-forward="true" selection-start-line="242" selection-start-column="25" selection-end-line="242" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Strategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="47" lean-forward="false" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="125" column="37" lean-forward="false" selection-start-line="125" selection-start-column="37" selection-end-line="125" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3758#3759#0" expanded="true" />
+            <element signature="e#3804#3805#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Test2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="509" column="9" lean-forward="true" selection-start-line="509" selection-start-column="9" selection-end-line="509" selection-end-column="9" />
+        <state relative-caret-position="442">
+          <caret line="518" column="0" lean-forward="true" selection-start-line="518" selection-start-column="0" selection-end-line="518" selection-end-column="0" />
           <folding>
             <element signature="e#20160#20161#0" expanded="true" />
             <element signature="e#20186#20187#0" expanded="true" />
