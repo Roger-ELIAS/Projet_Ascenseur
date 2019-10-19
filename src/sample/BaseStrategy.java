@@ -39,15 +39,15 @@ public class BaseStrategy implements Strategy {
 
         Test2.changeLiftButtonColor(floorDest, true);
 
-        if(controller.cabinMovement.equals(Movement.STOP)){
+        if(controller.cabinDirection.equals(Movement.STOP)){
             if(controller.currentFloor < floorDest - 1)
                 controller.upList.add(floorDest - 1);
             else
-                controller.downList.add(floorDest - 1);
+                controller.upListNext.add(floorDest - 1);
         }
 
         else if(controller.currentFloor < floorDest -1) {
-            if(controller.cabinMovement.equals(Movement.UP)) {
+            if(controller.cabinDirection.equals(Movement.UP)) {
                 controller.upList.add(floorDest - 1);
                 if (floorDest - 1 < controller.destination)
                     controller.destination = floorDest - 1;
@@ -56,13 +56,13 @@ public class BaseStrategy implements Strategy {
                 controller.downList.add(floorDest - 1);
         }
         else {
-            if(controller.cabinMovement.equals(Movement.DOWN)) {
+            if(controller.cabinDirection.equals(Movement.DOWN)) {
                 controller.downList.add(floorDest - 1);
                 if (floorDest - 1 > controller.destination)
                     controller.destination = floorDest - 1;
             }
             else
-                controller.upList.add(floorDest - 1);
+                controller.downListNext.add(floorDest - 1);
         }
         Collections.sort(controller.downList, Collections.reverseOrder());
         Collections.sort(controller.upList);

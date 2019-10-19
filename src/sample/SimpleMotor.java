@@ -26,7 +26,7 @@ public class SimpleMotor implements Motor {
             sleep(1000);
             Test2.stopMovingLift();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+
         }
     }
 
