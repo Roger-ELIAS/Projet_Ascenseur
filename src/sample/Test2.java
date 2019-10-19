@@ -115,7 +115,7 @@ public class Test2 extends Application {
         lift.getChildren().add(liftContainer);
         window.getChildren().add(lift);
 
-        startMovingLift(numberOfFloors - 1, false);
+        startMovingLift(6, false);
     }
 
     public void generateControlPanel(AnchorPane window, int numberOfFloors){
@@ -230,7 +230,7 @@ public class Test2 extends Application {
             floorIndicator.setY(76);
             floorIndicator.setFont(Font.font("Arial Bold", 37));
             Rectangle floorDownIndicator = new Rectangle();
-            upIndicators.add(floorDownIndicator);
+            downIndicators.add(floorDownIndicator);
             floorDownIndicator.setArcHeight(5);
             floorDownIndicator.setArcWidth(5);
             floorDownIndicator.setFill(Color.WHITE);
@@ -423,8 +423,8 @@ public class Test2 extends Application {
 
     @FXML
     public static void changeIndicatorColor(boolean stat, boolean direction){
-        if(direction){
-            if(stat){
+        if(direction == true){
+            if(stat == true){
                 for(Rectangle r : upIndicators)
                     r.setFill(Color.RED);
                 liftUpRectangle.setFill(Color.RED);
@@ -434,7 +434,7 @@ public class Test2 extends Application {
                 liftUpRectangle.setFill(Color.WHITE);
             }
         }else {
-            if(stat){
+            if(stat == true){
                 for(Rectangle r : downIndicators)
                     r.setFill(Color.RED);
                 liftDownRectangle.setFill(Color.RED);
@@ -456,7 +456,7 @@ public class Test2 extends Application {
     }
 
     @FXML
-    public static void changeLiftText(int floor){
+    public void changeLiftText(int floor){
         liftFloorText.setText(Integer.toString(floor));
     }
 
@@ -473,5 +473,6 @@ public class Test2 extends Application {
 
     static public void stopMovingLift(){
         tt.pause();
+//        liftObject.setLayoutY((66 * numberOfFloors) - 66 * floor - 66);
     }
 }
