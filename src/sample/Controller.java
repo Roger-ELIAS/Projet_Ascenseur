@@ -7,10 +7,11 @@ import static java.lang.Thread.sleep;
 public class Controller {
 
     Cabin cabin;
+
     Strategy movingStrategy;
-    volatile int currentFloor = 0;
+    int currentFloor = 0;
     Movement cabinDirection;
-    int destination;
+    volatile int destination;
     boolean emergencyStopped = false;
     float startTime = 0;
     float stoppedTime = 0;
@@ -22,14 +23,14 @@ public class Controller {
     ArrayList<Integer> upListNext = new ArrayList<>();
     ArrayList<Integer> downListNext = new ArrayList<>();
 
-    public void sendNotif(){
-        if(cabinDirection.equals(Movement.UP))
+
+    public void sendNotif() {
+        if (cabinDirection.equals(Movement.UP))
             currentFloor++;
-        else if(cabinDirection.equals(Movement.DOWN))
+        else if (cabinDirection.equals(Movement.DOWN))
             currentFloor--;
-        else
-            System.out.println(currentFloor);
         startTime = System.nanoTime();
+        Test2.changeLiftText(currentFloor);
     }
 
     public Controller(Cabin cabin) {
@@ -39,10 +40,10 @@ public class Controller {
     }
 
     public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
-        if(cabinDirection.equals(Movement.STOP)){
-            if(controller.currentFloor < floorDest)
+        if (cabinDirection.equals(Movement.STOP)) {
+            if (controller.currentFloor < floorDest)
                 controller.cabinDirection = Movement.UP;
-            else if(controller.currentFloor > floorDest)
+            else if (controller.currentFloor > floorDest)
                 controller.cabinDirection = Movement.DOWN;
             else
                 controller.cabinDirection = Movement.STOP;
@@ -51,22 +52,20 @@ public class Controller {
         movingStrategy.addInPath(this, floorDest, requestedMovement);
     }
 
-    public void addInPath(Controller controller, int floorDest){
+    public void addInPath(Controller controller, int floorDest) {
 
-        if(cabinDirection.equals(Movement.STOP)){
-            if(controller.currentFloor < floorDest - 1 ) {
+        if (cabinDirection.equals(Movement.STOP)) {
+            if (controller.currentFloor < floorDest - 1) {
                 controller.cabinDirection = Movement.UP;
-            }
-            else if(controller.currentFloor > floorDest - 1) {
+            } else if (controller.currentFloor > floorDest - 1) {
                 controller.cabinDirection = Movement.DOWN;
-            }
-            else
+            } else
                 controller.cabinDirection = Movement.STOP;
         }
         movingStrategy.addInPath(this, floorDest);
     }
 
-    public void emergencyStop(){
+    public void emergencyStop() {
         emergencyStopped = true;
         cabinDirection = Movement.STOP;
         upList = new ArrayList<>();
@@ -79,20 +78,20 @@ public class Controller {
         moveCabin();
     }
 
-    public int getMaxTravelValue(){
-        if(cabinDirection.equals(Movement.DOWN))
+    public int getMaxTravelValue() {
+        if (cabinDirection.equals(Movement.DOWN))
             return currentFloor;
         else
-            return 6 - currentFloor;
+            return Test2.numberOfFloors - currentFloor;
     }
 
     public class CabinMover extends Thread {
-        public void run(){
+        public void run() {
             howToMoveCabin();
         }
     }
 
-    public void moveCabin(){
+    public void moveCabin() {
         cabinMover = new CabinMover();
         cabinMover.start();
     }
@@ -104,76 +103,175 @@ public class Controller {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            while (cabinDirection.equals(Movement.STOP)) {
+            while (!upList.isEmpty()) {
+                destination = upList.get(0);
+                if (destination < currentFloor) {
+                    int firstDestination = destination;
+                    while (currentFloor - 1 > firstDestination || currentFloor - 1 > 0) {
+                        if (!downList.isEmpty())
+                            destination = downList.get(0);
+                        cabin.goDown();
+                        Test2.changeIndicatorColor(true, false);
+                        Test2.changeIndicatorColor(false, true);
+                        try {
+                            sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (currentFloor - 1 == firstDestination) {
+                            cabin.stopNext();
+                            cabin.stop();
+                            Test2.changeButtonColor(firstDestination, false, true);
+                            Test2.changeLiftButtonColor(firstDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+
+                            upList.remove(upList.indexOf(firstDestination));
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (currentFloor - 1 == destination || currentFloor - 1 == 0) {
+                            cabin.stopNext();
+                            cabin.stop();
+                            int tmpDestination = destination;
+                            Test2.changeButtonColor(tmpDestination, false, false);
+                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (!downList.isEmpty()) {
+                                downList.remove(downList.indexOf(tmpDestination));
+                            }
+                        }
+
+                    }
+                } else {
+                    cabin.goUp();
+                    Test2.changeIndicatorColor(true, true);
+                    Test2.changeIndicatorColor(false, false);
+
+                    try {
+                        sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (currentFloor + 1 == Test2.numberOfFloors || currentFloor + 1 == destination) {
+                        cabin.stopNext();
+                        cabin.stop();
+                        int tmpDestination = destination;
+                        Test2.changeButtonColor(tmpDestination, false, true);
+                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                        Test2.changeIndicatorColor(false, true);
+                        Test2.changeIndicatorColor(false, false);
+                        try {
+                            cabin.sensor.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        upList.remove(upList.indexOf(tmpDestination));
+                    }
+                }
+                if (upList.isEmpty() && !upListNext.isEmpty()) {
+                    upList = upListNext;
+                    upListNext = new ArrayList<>();
+                }
+                if (downList.isEmpty() && !downListNext.isEmpty()) {
+                    downList = downListNext;
+                    downListNext = new ArrayList<>();
+                }
+            }
+            while (!downList.isEmpty()) {
+                destination = downList.get(0);
+                if (destination > currentFloor) {
+                    int firstDestination = destination;
+                    while (currentFloor + 1 < firstDestination || currentFloor + 1 > Test2.numberOfFloors) {
+                        if (!upList.isEmpty())
+                            destination = upList.get(0);
+                        cabin.goUp();
+                        Test2.changeIndicatorColor(true, true);
+                        Test2.changeIndicatorColor(false, false);
+
+                        try {
+                            sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (currentFloor + 1 == firstDestination) {
+                            cabin.stopNext();
+                            cabin.stop();
+                            Test2.changeButtonColor(firstDestination, false, false);
+                            Test2.changeLiftButtonColor(firstDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            downList.remove(downList.indexOf(firstDestination));
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (currentFloor + 1 == destination || currentFloor + 1 == Test2.numberOfFloors) {
+                            cabin.stopNext();
+                            cabin.stop();
+                            int tmpDestination = destination;
+                            Test2.changeButtonColor(tmpDestination, false, true);
+                            Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                            Test2.changeIndicatorColor(false, true);
+                            Test2.changeIndicatorColor(false, false);
+                            try {
+                                cabin.sensor.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (!upList.isEmpty()) {
+                                upList.remove(upList.indexOf(tmpDestination));
+                            }
+                        }
+
+                    }
+                } else {
+                    cabin.goDown();
+                    Test2.changeIndicatorColor(true, false);
+                    Test2.changeIndicatorColor(false, true);
+
+                    try {
+                        sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (currentFloor - 1 == 0 || currentFloor - 1 == destination) {
+                        cabin.stopNext();
+                        cabin.stop();
+                        int tmpDestination = destination;
+                        Test2.changeButtonColor(tmpDestination, false, false);
+                        Test2.changeLiftButtonColor(tmpDestination + 1, false);
+                        Test2.changeIndicatorColor(false, true);
+                        Test2.changeIndicatorColor(false, false);
+                        try {
+                            cabin.sensor.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        downList.remove(downList.indexOf(tmpDestination));
+                    }
+                    if (upList.isEmpty() && !upListNext.isEmpty()) {
+                        upList = upListNext;
+                        upListNext = new ArrayList<>();
+                    }
+                    if (downList.isEmpty() && !downListNext.isEmpty()) {
+                        downList = downListNext;
+                        downListNext = new ArrayList<>();
+                    }
+                }
                 try {
                     sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-            }
-            if(!upList.isEmpty()){
-                destination = upList.get(0);
-                cabin.goUp();
-                if (currentFloor + 1 == 6 ||currentFloor + 1 == destination) {
-                    cabin.isMoving = false;
-                    cabin.stopNext();
-                    upList.remove(upList.indexOf(destination));
-                    Test2.changeButtonColor(destination, false, true);
-                    Test2.changeLiftButtonColor(destination + 1  , false);
-
-                    try {
-                        cabin.sensor.join();
-                        cabinDirection = Movement.STOP;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(!upList.isEmpty()){
-                        destination = upList.get(0);
-                        cabin.goUp();
-                    }
-                    else{
-                        if(!downList.isEmpty()){
-                            destination = downList.get(0);
-                            cabin.goDown();
-                        }
-                        else {
-                            cabin.isMoving = false;
-                            cabinDirection = Movement.STOP;
-                        }
-                    }
-                }
-            }
-            else{
-                if(!downList.isEmpty()){
-                    destination = downList.get(0);
-                    cabin.goDown();
-                    if (currentFloor - 1 == 0 ||currentFloor - 1 == destination) {
-                        Test2.changeButtonColor(destination, false, false);
-                        Test2.changeLiftButtonColor(destination + 1  , false);
-                        cabin.isMoving = false;
-                        cabin.stopNext();
-                        downList.remove(downList.indexOf(destination));
-                        try {
-                            cabin.sensor.join();
-                            cabinDirection = Movement.STOP;
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        if(!downList.isEmpty()){
-                            destination = downList.get(0);
-                            cabin.goDown();
-                        }
-                        else{
-                            if(!upList.isEmpty()){
-                                destination = upList.get(0);
-                                cabin.goUp();
-                            }
-                            else {
-                                cabin.isMoving = false;
-                                cabinDirection = Movement.STOP;
-                            }
-                        }
-                    }
                 }
             }
         }

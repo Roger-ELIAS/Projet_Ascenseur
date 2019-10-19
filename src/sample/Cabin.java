@@ -32,12 +32,12 @@ public class Cabin {
                     if(!stopNext) {
                         System.out.println("I passed a floor");
                         controller.sendNotif();
-                        System.out.println(controller.currentFloor);
                     }
                     else{
                         isMoving = false;
                         sleep(5000);
                         System.out.println("Exiting");
+                        System.out.println(controller.upList);
                         stopNext = false;
                         this.interrupt();
                     }
@@ -78,4 +78,6 @@ public class Cabin {
         simpleMotor.stopNext();
         stopNext = true;
     }
+
+    public void stop(){ isMoving = false;}
 }
