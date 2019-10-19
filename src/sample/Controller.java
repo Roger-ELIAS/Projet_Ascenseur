@@ -1,5 +1,7 @@
 package sample;
 
+import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
+
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -31,6 +33,8 @@ public class Controller {
             currentFloor--;
         startTime = System.nanoTime();
         Test2.changeLiftText(currentFloor);
+        Test2.changeFloorText(currentFloor);
+
     }
 
     public Controller(Cabin cabin) {
@@ -66,16 +70,33 @@ public class Controller {
     }
 
     public void emergencyStop() {
+        Test2.changeLiftButtonColor( 0, true);
+        Test2.turnOffIndicators();
         emergencyStopped = true;
         cabinDirection = Movement.STOP;
+        cabin.isMoving = false;
+        cabin.stopNext = false;
         upList = new ArrayList<>();
         downList = new ArrayList<>();
         upListNext = new ArrayList<>();
         downListNext = new ArrayList<>();
         stoppedTime = System.nanoTime();
         cabinMover.interrupt();
+        if(cabin.sensor!= null)
+            cabin.sensor.interrupt();
+        cabin.emergencyStop();
         desynchTime = stoppedTime - startTime;
-        moveCabin();
+        try {
+            moveCabin();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopEmergencyStop(){
+        emergencyStopped = false;
+        Test2.changeLiftButtonColor( 0, false);
+
     }
 
     public int getMaxTravelValue() {
@@ -87,17 +108,31 @@ public class Controller {
 
     public class CabinMover extends Thread {
         public void run() {
-            howToMoveCabin();
+            try {
+                howToMoveCabin();
+            }
+            catch(ArrayIndexOutOfBoundsException e){
+                System.out.println("Failed to remove");
+            }
         }
     }
 
-    public void moveCabin() {
+    public void moveCabin()throws InterruptedException, ArrayIndexOutOfBoundsException {
         cabinMover = new CabinMover();
         cabinMover.start();
     }
 
     public void howToMoveCabin() {
-        while (!emergencyStopped) {
+
+        while(emergencyStopped) {
+            try {
+                sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        while (true) {
             try {
                 sleep(1);
             } catch (InterruptedException e) {
@@ -159,7 +194,7 @@ public class Controller {
                     try {
                         sleep(1);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println("Sleep interrupted");
                     }
                     if (currentFloor + 1 == Test2.numberOfFloors || currentFloor + 1 == destination) {
                         cabin.stopNext();

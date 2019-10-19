@@ -23,10 +23,12 @@ public class Cabin {
                     }
                     else {
                         long time = (long) controller.desynchTime / 1000000;
+                        System.out.println(time);
                         if (controller.cabinDirection.equals(Movement.UP))
-                            sleep(1000 - time);
+                            sleep(1000 - time%1000);
                         else
-                            sleep(time);
+                            sleep(time%1000);
+                        System.out.println("Here");
                         controller.desynchTime = 0;
                     }
                     if(!stopNext) {

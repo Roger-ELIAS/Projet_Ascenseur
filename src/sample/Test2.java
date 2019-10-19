@@ -48,7 +48,11 @@ public class Test2 extends Application {
 
     public static void main(String[] args) {
         myCabin.setController(controller);
-        controller.moveCabin();
+        try {
+            controller.moveCabin();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Application.launch(Test2.class, args);
     }
 
@@ -115,7 +119,7 @@ public class Test2 extends Application {
         lift.getChildren().add(liftContainer);
         window.getChildren().add(lift);
 
-        startMovingLift(6, false);
+        startMovingLift(numberOfFloors - 1, false);
     }
 
     public void generateControlPanel(AnchorPane window, int numberOfFloors){
@@ -367,11 +371,22 @@ public class Test2 extends Application {
     @FXML
     private Label messagesText ;
 
+    private boolean fullStopDoubleClicked = false;
+
     @FXML
     public void fullStop(Event event) {
         Button btn = (Button) event.getSource();
 //        String id = btn.getId();
-        messagesText.setText("EMERGENCY STOP");
+        if(!fullStopDoubleClicked) {
+            messagesText.setText("EMERGENCY STOP");
+            controller.emergencyStop();
+            fullStopDoubleClicked = true;
+        }
+        else {
+            messagesText.setText("END OF EMERGENCY STOP");
+            controller.stopEmergencyStop();
+            fullStopDoubleClicked = false;
+        }
     }
 
     @FXML
@@ -456,8 +471,15 @@ public class Test2 extends Application {
     }
 
     @FXML
-    public void changeLiftText(int floor){
+    public static void changeLiftText(int floor){
         liftFloorText.setText(Integer.toString(floor));
+    }
+
+    @FXML
+    public static void changeFloorText(int floor){
+        for(Text floorNumberIndicator : floorNumberIndicators){
+            floorNumberIndicator.setText(Integer.toString(floor));
+        }
     }
 
     static public void startMovingLift(int floorsLeft, boolean direction){
@@ -473,6 +495,31 @@ public class Test2 extends Application {
 
     static public void stopMovingLift(){
         tt.pause();
-//        liftObject.setLayoutY((66 * numberOfFloors) - 66 * floor - 66);
+    }
+
+    static public void turnOffIndicators(){
+
+        liftDownRectangle.setFill(Color.WHITE);
+        liftUpRectangle.setFill(Color.WHITE);
+
+        for(Rectangle r : upIndicators){
+            r.setFill(Color.WHITE);
+        }
+        for(Rectangle r : downIndicators){
+            r.setFill(Color.WHITE);
+        }
+
+        for(int i = 1 ; i < numberOfFloors ; ++i){
+            controlButtons.get(i).setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+
+        for(Button b : upButtons){
+            b.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+
+        for(Button b : downButtons){
+            b.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+
     }
 }

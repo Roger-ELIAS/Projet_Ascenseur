@@ -5,7 +5,7 @@ public class BaseStrategy implements Strategy {
 
     @Override
     public void addInPath(Controller controller, int floorDest, Movement requestedMovement) {
-        if (controller.upList.contains(floorDest) || controller.downList.contains(floorDest) || controller.upListNext.contains(floorDest) || controller.downListNext.contains(floorDest))
+        if (controller.upList.contains(floorDest) && requestedMovement.equals(Movement.UP) || controller.upListNext.contains(floorDest) || controller.downListNext.contains(floorDest))
             return;
 
         if (requestedMovement.equals(Movement.UP)) {
